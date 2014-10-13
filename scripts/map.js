@@ -22,9 +22,3 @@ function handleTerritory(event)
 {
 	uploadFile(event);
 }
-
-// Generate the map
-function generateMap()
-{
-	refreshMap();
-}

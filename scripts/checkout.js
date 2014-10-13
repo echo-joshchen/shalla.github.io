@@ -1,7 +1,12 @@
+var SantaRosa = [38.438710, -122.716763,"Santa Rosa"];
+var coords = [];
+var map = null;
 var db = null;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
+    $("#refresh").click(refreshMap);
+	$("#mapResize").resizable();
 });
 
 // Load database from a user selected file
@@ -51,35 +56,128 @@ function createTerritoryTable()
     var tername = menu.options[menu.selectedIndex].value;
     var res = db.exec("SELECT * FROM master WHERE tername = \"" + tername + "\";");
     
-    writeTableHeaderRow(res[0].columns);
+    writeTableHeaderRow();
     
+    var index = 1;
     res[0].values.forEach(function(rowData) {
-        writeTableRow(rowData);
+        index = writeTableRow(rowData, index);
     });    
+    
+    generateMap();
 }
 
-function writeTableHeaderRow(rowData)
+function writeTableHeaderRow()
 {
     var table = document.getElementById("tertable");
     var tableBody = document.createElement('thead');
     var row = document.createElement('tr');
-    rowData.forEach(function(cellData) {
-      var cell = document.createElement('td');
-      cell.appendChild(document.createTextNode(cellData));
-      row.appendChild(cell);
-    });
+    
+    // Create columns
+    var cell = document.createElement('td');
+    cell.colSpan = "3";
+    cell.className = "nh-head";
+    cell.innerHTML = "NH";
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    cell.className = "index-head";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "name";
+    cell.innerHTML = "Name";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "addr";
+    cell.innerHTML = "Address";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "conf";
+    cell.innerHTML = "Confirmed";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "notes";
+    cell.innerHTML = "Notes";
+    row.appendChild(cell);
+    
     tableBody.appendChild(row);
     table.appendChild(tableBody);
 }
 
-function writeTableRow(rowData)
+function writeTableRow(rowData, index)
 {
+    // Skip if marked as not chinese
+    if (rowData[9] == 1)
+    {
+        return index;
+    }
+    
     var table = document.getElementById("tertable");
     var row = document.createElement('tr');
-    rowData.forEach(function(cellData) {
-      var cell = document.createElement('td');
-      cell.appendChild(document.createTextNode(cellData));
-      row.appendChild(cell);
-    });
+    
+    // Fill cell data
+    // NH boxes
+    row.appendChild(document.createElement('td'));
+    row.appendChild(document.createElement('td'));
+    row.appendChild(document.createElement('td'));
+    
+    // Index
+    var cell = document.createElement('td');
+    cell.className = "index";
+    cell.innerHTML = index;
+    row.appendChild(cell);
+    
+    // Name
+    cell = document.createElement('td');
+    cell.className = "name";
+    cell.innerHTML = rowData[0];
+    row.appendChild(cell);
+    
+    // Address
+    cell = document.createElement('td');
+    cell.className = "addr";
+    cell.innerHTML = rowData[1] + " " + rowData[2];
+    row.appendChild(cell);
+    
+    // Confirmed
+    cell = document.createElement('td');
+    cell.className = "conf";
+    if ( rowData[14] == 1)
+    {
+        cell.innerHTML = "Yes";
+    }
+    row.appendChild(cell);
+    
+    // Notes
+    cell = document.createElement('td');
+    cell.className = "notes";
+    if (rowData[7] != null)
+    {
+        cell.innerHTML = rowData[7];
+    }
+    row.appendChild(cell);
+    
+    
     table.appendChild(row);
+    
+    // Fill coordinate info;
+    if (rowData[12] != null &&
+        rowData[13] != null)
+    {
+        coords[index-1] = [rowData[12],rowData[13]];
+    }
+    
+    return index + 1;
+}
+
+function generateMap()
+{
+    if (map == null)
+    {
+        createMap();
+    }
+    refreshMap();
 }

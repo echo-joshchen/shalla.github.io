@@ -46,7 +46,7 @@ function setAddressMarkers()
 	// Add all markers
 	for (var i = 0; i < coords.length; i++) 
 	{
-		var markerName = "images/marker" + i + ".png";
+		var markerName = "images/marker" + (i + 1) + ".png";
 		if (coords[i] != null)
 		{
 			map.addMarker({
@@ -89,7 +89,10 @@ function fitMap()
 // Resize map and set markers
 function refreshMap()
 {
-  fitMap();
-  map.removeMarkers();
-  setAddressMarkers();
+    if (map != null)
+    {
+        fitMap();
+        map.removeMarkers();
+        setAddressMarkers();
+    }
 }
