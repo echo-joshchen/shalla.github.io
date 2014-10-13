@@ -1,10 +1,17 @@
-#terr {
-    width: 100%;
+#menu {
+    margin: 10px auto;
+    width: 350px;
+}
+
+.chosen-single {
+    height: 100px;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 #map {
-    width: 100%;
-    height: 100%;
+    width: 99%;
+    height: 99%;
     margin: .5em;
 }
 

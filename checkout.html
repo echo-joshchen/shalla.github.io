@@ -27,16 +27,17 @@
 
 <body>
 
-    <label>Load an SQLite database file: <input type='file' id='dbfile' ></label> <br>
+    <label id="fileSelect">Load an SQLite database file: <input type='file' id='dbfile' ></label> <br>
     
-    <select id="termenu" data-placeholder="Choose a territory..." class="chosen-select" style="width:350px;" tabindex="2"></select>
+    <div id="menu">
+        <select id="termenu" data-placeholder="Choose a territory..." class="chosen-select" style="width:350px;" tabindex="2"></select>
+    </div>
     
     <table id="tertable"></table>
 
     <div id="mapResize" class="ui-widget-content">
         <div id="map"></div>
     </div>
-    <button type="button" id="refresh">Refresh</button>
 
 </body>
 </html>

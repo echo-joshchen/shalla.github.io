@@ -5,7 +5,7 @@ var db = null;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
-    $("#refresh").click(refreshMap);
+    $("#tertable").click(refreshMap);
 	$("#mapResize").resizable();
 });
 
@@ -16,6 +16,8 @@ function loadDatabase()
     var r = new FileReader();
     r.onload = function(){readDbFile(r)};
     r.readAsArrayBuffer(f);
+    
+    $("#fileSelect").hide();
 }
 
 // Read the database file
@@ -48,8 +50,9 @@ function fillDropDownMenu(rowData)
 
 function createTerritoryTable()
 {
-    // Clear current table
+    // Clear current table and map
     document.getElementById("tertable").innerHTML = "";
+    coords = [];
     
     // Read out selected territory
     var menu = document.getElementById("termenu");
