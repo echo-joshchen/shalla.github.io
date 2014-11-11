@@ -15,6 +15,7 @@
     <script type="text/javascript" src="scripts/gmaps.js"></script>
     <script type="text/javascript" src="scripts/csvimport.js"></script>
     <script type="text/javascript" src="scripts/mapfunctions.js"></script>
+    <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
 
     
     <!-- CSS -->
@@ -29,6 +30,11 @@
 
     <label id="fileSelect">Load an SQLite database file: <input type='file' id='dbfile' ></label> <br>
     
+    <div id="checkout">
+        <input type="text" id="outDate" value="">
+        <button id="checkoutButton">Checkout</button>
+    </div>
+
     <div id="menu">
         <select id="termenu" data-placeholder="Choose a territory..." class="chosen-select" style="width:350px;" tabindex="2"></select>
     </div>

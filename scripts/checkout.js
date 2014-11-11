@@ -7,6 +7,15 @@ $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
     $("#tertable").click(refreshMap);
 	$("#mapResize").resizable();
+
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    var month = currentDate.getMonth() + 1;
+    var year = currentDate.getFullYear();
+    $("#outDate").val(month + "/" + day + "/" + year);
+
+    $("#checkout").hide();
+    $("#checkoutButton").click(checkoutTerritory);
 });
 
 // Load database from a user selected file
@@ -18,6 +27,7 @@ function loadDatabase()
     r.readAsArrayBuffer(f);
     
     $("#fileSelect").hide();
+    $("#checkout").show();
 }
 
 // Read the database file
@@ -183,4 +193,24 @@ function generateMap()
         createMap();
     }
     refreshMap();
+}
+
+function checkoutTerritory()
+{
+    // Mark selected territory as checked out
+    var menu = document.getElementById("termenu");
+    var tername = menu.options[menu.selectedIndex].value;
+    var command = "UPDATE territory SET free=\"FALSE\" WHERE tername=\"" + tername + "\";";
+    var res = db.exec(command);
+
+    // Mark check out date from text box
+    var date = $("#outDate").val();
+    command = "UPDATE territory SET outdate = \"" + date + "\" WHERE tername=\"" + tername + "\";";
+    var res = db.exec(command);
+
+    // Read out selected territory
+    var data = db.export();
+    var blob = new Blob([data], {type: "application/x-sqlite3;charset=" + document.characterSet});
+    saveAs(blob, "territory.db");
+    console.log("File save done");
 }
