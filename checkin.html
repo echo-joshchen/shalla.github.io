@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Checkout Territory</title>
+    <title>Checkin Territory</title>
   
     <!-- JavaScript -->
     <script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
     <script type="text/javascript" src="scripts/jquery-ui.js"></script>
     <script type="text/javascript" src="scripts/sql.js"></script>
-    <script type="text/javascript" src="scripts/checkout.js"></script>
+    <script type="text/javascript" src="scripts/checkin.js"></script>
     <script type="text/javascript" src="scripts/chosen.jquery.js"></script>
     <script type="text/javascript" src="scripts/prism.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -36,10 +36,10 @@
             <option value='show'>Show Confirmed Not Chinese</option>
         </select>
     </div>
-
-    <div id="checkout">
-        <input type="text" id="outDate" value="">
-        <button id="checkoutButton">Checkout</button>
+    
+    <div id="checkin">
+        <input type="text" id="inDate" value="">
+        <button id="checkinButton">Checkin</button>
     </div>
 
     <div id="menu">
@@ -47,6 +47,8 @@
     </div>
     
     <table id="tertable"></table>
+
+    <button id = "addNew">Add new address</button>
 
     <div id="mapResize" class="ui-widget-content">
         <div id="map"></div>

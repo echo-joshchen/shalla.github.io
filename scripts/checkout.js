@@ -2,6 +2,7 @@ var SantaRosa = [38.438710, -122.716763,"Santa Rosa"];
 var coords = [];
 var map = null;
 var db = null;
+var verify = false;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
@@ -122,8 +123,9 @@ function writeTableHeaderRow()
 
 function writeTableRow(rowData, index)
 {
+    var verify = $("#verifySel").val() == "show"
     // Skip if marked as not chinese
-    if (rowData[9] == 1)
+    if (!verify && rowData[9] == 1)
     {
         return index;
     }
@@ -161,6 +163,10 @@ function writeTableRow(rowData, index)
     if ( rowData[14] == 1)
     {
         cell.innerHTML = "Yes";
+    }
+    else if ( rowData[9] == 1)
+    {
+        cell.innerHTML = "Not CH";
     }
     row.appendChild(cell);
     
