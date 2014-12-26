@@ -6,7 +6,7 @@ var dbAddresses=[];
 var addresses=[];
 var numTotalAddresses=0;
 var numAddressesCoded=0;
-var maxTableSize=30;
+var maxTableSize=50;
 
 // Max at the same time
 var maxGeocode=10;
@@ -388,12 +388,12 @@ function saveTerritory()
             // Lat
             command = "UPDATE master SET lat = \"" + lat + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
             res = db.exec(command);
-            console.log(lat);
+            //console.log(lat);
             
             // Long
             command = "UPDATE master SET long = \"" + longitude + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
             res = db.exec(command);
-            console.log(longitude);
+            //console.log(longitude);
         }
         else
         {

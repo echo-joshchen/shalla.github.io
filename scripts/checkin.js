@@ -137,6 +137,11 @@ function writeTableHeaderRow()
     row.appendChild(cell);
     
     cell = document.createElement('td');
+    cell.className = "city";
+    cell.innerHTML = "City";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
     cell.innerHTML = "Confirmed";
     row.appendChild(cell);
     
@@ -195,19 +200,29 @@ function writeTableRow(rowData, index)
     cell.innerHTML = "<input type='text' id='street' value='" + rowData[2] + "'>";
     row.appendChild(cell);
     dbAddresses[index] = [rowData[1], rowData[2]];
+
+    // City 
+    cell = document.createElement('td');
+    cell.className = "city";
+    cell.innerHTML = "<input type='text' id='city' value='" + rowData[3] + "'>";
+    row.appendChild(cell);
     
     // Confirmed
     cell = document.createElement('td');
     cell.className = "conf";
-    cell.innerHTML = "<select id='confSelect'><option value='Yes'>Yes</option><option value='No'>No</option></select>";
+    cell.innerHTML = "<select id='confSelect'><option value='Yes'>Yes</option><option value='No'>No</option><option value='Not CH'>Not CH</option></select>";
     row.appendChild(cell);
-    if ( rowData[14] == 1 || rowData[14] == "Yes")
+    if ( rowData[14] == 1 || rowData[14] == "Yes" )
     {
         cell.querySelector("#confSelect").value="Yes";
     }
-    else
+    else if ( rowData[14] == 0 || rowData[14] == "No" )
     {
         cell.querySelector("#confSelect").value="No";
+    }
+    else
+    {
+        cell.querySelector("#confSelect").value="Not CH";
     }
     
     // Notes
@@ -264,8 +279,9 @@ function checkinTerritory()
         var name = data.children[4].children[0].value;
         var housenum = data.children[5].children[0].value;
         var street = data.children[6].children[0].value;
-        var confirmed = data.children[7].children[0].value;
-        var notes = data.children[8].children[0].value;
+        var city = data.children[7].children[0].value;
+        var confirmed = data.children[8].children[0].value;
+        var notes = data.children[9].children[0].value;
 
         command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
         res = db.exec(command);
@@ -276,15 +292,10 @@ function checkinTerritory()
             res = db.exec(command);
             //console.log(name);
 
-            // House number
-            command = "UPDATE master SET housenum = \"" + housenum + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
+            // City
+            command = "UPDATE master SET city = \"" + city + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
             res = db.exec(command);
-            //console.log(housenum);
-
-            // House number
-            command = "UPDATE master SET street = \"" + street + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            //console.log(street);
+            //console.log(city);
 
             // Confirmed
             command = "UPDATE master SET confirmed = \"" + confirmed + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
@@ -295,10 +306,15 @@ function checkinTerritory()
             command = "UPDATE master SET notes = \"" + notes + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
             res = db.exec(command);
             //console.log(street);
+
+            // Update House number and street last to make searches stay correct
+            command = "UPDATE master SET housenum = \"" + housenum + "\", street = \"" + street + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
+            res = db.exec(command);
+            //console.log(housenum + " " + street);
         }
         else
         {
-            command = 'INSERT INTO master (name, housenum, street, confirmed, notes, tername) VALUES ("' + name + '","' + housenum + '","' + street + '","' + confirmed + '","' + notes + '","' + tername + '");';
+            command = 'INSERT INTO master (name, housenum, street, city, state, confirmed, notes, tername) VALUES ("' + name + '","' + housenum + '","' + street + '","' + city + '","' + "CA" + '","' + confirmed + '","' + notes + '","' + tername + '");';
             console.log(command);
             res = db.exec(command);
 

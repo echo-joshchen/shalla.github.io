@@ -125,7 +125,7 @@ function writeTableRow(rowData, index)
 {
     var verify = $("#verifySel").val() == "show"
     // Skip if marked as not chinese
-    if (!verify && rowData[9] == 1)
+    if (!verify && (rowData[9] == 1 || rowData[14] == "Not CH"))
     {
         return index;
     }
@@ -160,7 +160,7 @@ function writeTableRow(rowData, index)
     // Confirmed
     cell = document.createElement('td');
     cell.className = "conf";
-    if ( rowData[14] == 1)
+    if ( rowData[14] == 1 || rowData[14] == "Yes")
     {
         cell.innerHTML = "Yes";
     }
