@@ -3,6 +3,7 @@ var coords = [];
 var map = null;
 var db = null;
 var dbAddresses=[];
+var maxTableSize=50;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
@@ -97,9 +98,11 @@ function createTerritoryTable()
     writeTableHeaderRow();
     
     var index = 1;
-    res[0].values.forEach(function(rowData) {
+    for (var i = 0; i < res[0].values.length && i < maxTableSize; i++)
+    {
+        var rowData = res[0].values[i];
         index = writeTableRow(rowData, index);
-    });    
+    }
 
     generateMap();
 }
@@ -310,9 +313,9 @@ function checkinTerritory()
             // Update House number and street last to make searches stay correct
             command = "UPDATE master SET housenum = \"" + housenum + "\", street = \"" + street + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
             res = db.exec(command);
-            //console.log(housenum + " " + street);
+            console.log("Address updated: " + String(dbAddresses[i]));
         }
-        else
+        else if (housenum != "" && street != "")
         {
             command = 'INSERT INTO master (name, housenum, street, city, state, confirmed, notes, tername) VALUES ("' + name + '","' + housenum + '","' + street + '","' + city + '","' + "CA" + '","' + confirmed + '","' + notes + '","' + tername + '");';
             console.log(command);
@@ -320,7 +323,7 @@ function checkinTerritory()
 
             // Store addresses in local records
             dbAddresses[i] = [housenum, street];
-            console.log("new address added " + String(dbAddresses[i]));
+            console.log("New address added: " + String(dbAddresses[i]));
         }
     }
 

@@ -3,6 +3,7 @@ var coords = [];
 var map = null;
 var db = null;
 var verify = false;
+var maxTableSize=50;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
@@ -73,9 +74,11 @@ function createTerritoryTable()
     writeTableHeaderRow();
     
     var index = 1;
-    res[0].values.forEach(function(rowData) {
+    for (var i = 0; i < res[0].values.length && i < maxTableSize; i++)
+    {
+        var rowData = res[0].values[i];
         index = writeTableRow(rowData, index);
-    });    
+    }
     
     generateMap();
 }
