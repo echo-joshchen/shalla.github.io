@@ -51,7 +51,6 @@ function loadDatabase()
     r.onload = function(){readDbFile(r)};
     r.readAsArrayBuffer(f);
     
-    $("#fileSelect").hide();
     $("#checkin").show();
 }
 
@@ -202,13 +201,13 @@ function writeTableRow(rowData, index)
     cell.className = "street";
     cell.innerHTML = "<input type='text' id='street' value='" + rowData[2] + "'>";
     row.appendChild(cell);
-    dbAddresses[index] = [rowData[1], rowData[2]];
 
     // City 
     cell = document.createElement('td');
     cell.className = "city";
     cell.innerHTML = "<input type='text' id='city' value='" + rowData[3] + "'>";
     row.appendChild(cell);
+    dbAddresses[index] = [rowData[1], rowData[2], rowData[3]];
     
     // Confirmed
     cell = document.createElement('td');
@@ -261,7 +260,7 @@ function generateMap()
 
 function checkinTerritory()
 {
-    // Mark selected territory as checked out
+    // Mark selected territory as checked in
     var menu = document.getElementById("termenu");
     var tername = menu.options[menu.selectedIndex].value;
     var command = "UPDATE territory SET free=\"TRUE\" WHERE tername=\"" + tername + "\";";
@@ -286,44 +285,46 @@ function checkinTerritory()
         var confirmed = data.children[8].children[0].value;
         var notes = data.children[9].children[0].value;
 
-        command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
+        command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
         res = db.exec(command);
-        if (res[0].values[0] >= 1)
+        try 
         {
-            // Name
-            command = "UPDATE master SET name = \"" + name + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            //console.log(name);
+            if (res[0].values[0] >= 1)
+            {
+                // Name
+                command = "UPDATE master SET name = \"" + name + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+                //console.log(name);
 
-            // City
-            command = "UPDATE master SET city = \"" + city + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            //console.log(city);
+                // Confirmed
+                command = "UPDATE master SET confirmed = \"" + confirmed + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+                //console.log(street);
+                
+                // Notes
+                command = "UPDATE master SET notes = \"" + notes + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+                //console.log(notes);
 
-            // Confirmed
-            command = "UPDATE master SET confirmed = \"" + confirmed + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            //console.log(street);
-            
-            // Notes
-            command = "UPDATE master SET notes = \"" + notes + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            //console.log(street);
+                // Update House number, street, and city last to make searches stay correct
+                command = "UPDATE master SET housenum=\"" + housenum + "\", street=\"" + street + "\", city=\"" + city + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+                console.log("Address updated: " + String(dbAddresses[i]));
+            }
+            else if (housenum != "" && street != "" && city != "")
+            {
+                command = 'INSERT INTO master (name, housenum, street, city, state, confirmed, notes, tername) VALUES ("' + name + '","' + housenum + '","' + street + '","' + city + '","' + "CA" + '","' + confirmed + '","' + notes + '","' + tername + '");';
+                console.log(command);
+                res = db.exec(command);
 
-            // Update House number and street last to make searches stay correct
-            command = "UPDATE master SET housenum = \"" + housenum + "\", street = \"" + street + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\";";
-            res = db.exec(command);
-            console.log("Address updated: " + String(dbAddresses[i]));
+                // Store addresses in local records
+                dbAddresses[i] = [housenum, street, city];
+                console.log("New address added: " + String(dbAddresses[i]));
+            }
         }
-        else if (housenum != "" && street != "")
+        catch (err)
         {
-            command = 'INSERT INTO master (name, housenum, street, city, state, confirmed, notes, tername) VALUES ("' + name + '","' + housenum + '","' + street + '","' + city + '","' + "CA" + '","' + confirmed + '","' + notes + '","' + tername + '");';
-            console.log(command);
-            res = db.exec(command);
-
-            // Store addresses in local records
-            dbAddresses[i] = [housenum, street];
-            console.log("New address added: " + String(dbAddresses[i]));
+            console.log("Address error: " + housenum + " " + street + " " + city + " had error: " + err.message);
         }
     }
 

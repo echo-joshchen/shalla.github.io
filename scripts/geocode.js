@@ -78,9 +78,13 @@ function geocode_address(housenum, street, city, index)
                 data.children[8].children[0].value = latlng.lng();
 
                 console.log("Address coded: " + address + " - " + latlng.lat() + ", " + latlng.lng());
+                console.log("Results : " + String(results[0]));
 
                 numAddressesCoded++;
                 checkIfCodingDone();
+            }
+            else {
+                console.log("Geocode status: " + String(status));
             }
         }
     });

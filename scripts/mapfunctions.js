@@ -17,6 +17,10 @@ function geocodeAddress(index)
 					var latlng = results[0].geometry.location;
 					coords[index] = [latlng.lat(), latlng.lng(), addresses[index]];
 					geocodeAddress(index + 1);
+					console.log("Results : " + String(results[0]));
+				}
+				else {
+					console.log("Geocode status: " + String(status));
 				}
 			}
 		});

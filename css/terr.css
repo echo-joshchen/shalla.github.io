@@ -1,0 +1,63 @@
+#menu {
+    margin: 10px auto;
+    width: 350px;
+}
+
+.chosen-single {
+    height: 100px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#map {
+    width: 99%;
+    height: 99%;
+    margin: .5em;
+}
+
+#mapResize {
+    width: 1200px;
+    height: 1200px;
+    padding: 1em;
+    text-align: center;
+    margin: 10px auto 100px auto;
+}
+
+table {
+  color: #000;
+  font-family: sans-serif;
+  font-size: .9em;
+  font-weight: 300;
+  line-height: 40px;
+  border-spacing: 0;
+  border: 1px solid #428bca;
+  width: 1000px;
+  margin: 10px auto;
+}
+
+th {font-weight: bold;}
+
+thead tr:last-child {border-bottom: 2px solid #ddd;}
+
+td {
+  border: 1px solid #777;
+  text-align: center;
+  width: 3%;
+}
+
+td.name {
+  width: 20%;
+}
+
+td.addr {
+  width: 26%;
+}
+
+td.conf {
+  width: 10%;
+}
+
+td.notes {
+  width: 35%;
+}
+
