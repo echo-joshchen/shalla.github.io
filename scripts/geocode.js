@@ -203,15 +203,19 @@ function writeTableRow(rowData, index)
     // Confirmed
     cell = document.createElement('td');
     cell.className = "conf";
-    cell.innerHTML = "<select id='confSelect'><option value='Yes'>Yes</option><option value='No'>No</option></select>";
+    cell.innerHTML = "<select id='confSelect'><option value='Yes'>Yes</option><option value='No'>No</option><option value='Not CH'>Not CH</option></select>";
     row.appendChild(cell);
-    if ( rowData[14] == 1 || rowData[14] == "Yes")
+    if ( rowData[14] == 1 || rowData[14] == "Yes" )
     {
         cell.querySelector("#confSelect").value="Yes";
     }
-    else
+    else if ( rowData[14] == 0 || rowData[14] == "No" )
     {
         cell.querySelector("#confSelect").value="No";
+    }
+    else
+    {
+        cell.querySelector("#confSelect").value="Not CH";
     }
     
     // Notes
@@ -221,7 +225,7 @@ function writeTableRow(rowData, index)
     {
         rowData[7] = "";
     }
-    cell.innerHTML = "<input type='text' id='notes' value='" + rowData[7] + "'>";
+    cell.innerHTML = "<input type='text' id='notes' value=\"" + rowData[7] + "\">";
     row.appendChild(cell);
     
     // Fill coordinate info;

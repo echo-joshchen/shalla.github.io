@@ -18,6 +18,7 @@ $(document).ready(function () {
     $("#applyRoute").click(applyRoute);
     $("#fillButton").click(fillTerritoryNames);
     $("#coordRoute").click(routeByCoords);
+    $("#newTerrButton").click(addNewTerritory);
 });
 
 function shiftRoute(eventData)
@@ -55,9 +56,11 @@ function fillTerritoryNames()
 {
     var tableRows = document.getElementById("tertable").children;
     var tername = document.getElementById("ternameFill").value;
+    var index1 = parseInt(document.getElementById("ternameindex1").value);
+    var index2 = parseInt(document.getElementById("ternameindex2").value);
 
     // For each address, if the route is blank, set route to the latitude value
-    for (var i = 1; i < tableRows.length; i++)
+    for (var i = index1; i <= index2 && i < tableRows.length; i++)
     {
         tableRows[i].children[ternameIndex].children[0].value = tername;
     }
@@ -304,4 +307,38 @@ function applyRoute()
     }
 
     createTerritoryTable();
+}
+
+function addNewTerritory()
+{
+    // Save the territory info
+    var newTerritoryName = document.getElementById("newTerrName").value;
+
+    command = "SELECT count(*) FROM territory WHERE tername=\"" + newTerritoryName + "\";";
+    res = db.exec(command);
+    try 
+    {
+        if (res[0].values[0] == 0)
+        {
+            // Tername
+            command = "INSERT INTO territory(tername, free) VALUES(\"" + newTerritoryName + "\", \"TRUE\");";
+            res = db.exec(command);
+
+            console.log("Territory added: " + newTerritoryName);
+        }
+        else
+        {
+            console.log("Territory already exists: " + newTerritoryName);
+        }
+    }
+    catch (err)
+    {
+        console.log("Territory name " + newTerritoryName + " had error: " + err.message);
+    }
+
+    // Read out selected territory
+    var data = db.export();
+    var blob = new Blob([data], {type: "application/x-sqlite3;charset=" + document.characterSet});
+    saveAs(blob, "territory.db");
+    console.log("File save done");
 }
