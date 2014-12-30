@@ -3,6 +3,8 @@ var coords = [];
 var map = null;
 var db = null;
 var dbAddresses=[];
+var ternameIndex = 5;
+var routeIndex = 6;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
@@ -14,6 +16,8 @@ $(document).ready(function () {
     $("#incrButton").click(true, shiftRoute);
     $("#decrButton").click(false, shiftRoute);
     $("#applyRoute").click(applyRoute);
+    $("#fillButton").click(fillTerritoryNames);
+    $("#latRoute").click(routeByLatitude);
 });
 
 function shiftRoute(eventData)
@@ -26,7 +30,7 @@ function shiftRoute(eventData)
     // Start at 1 to skip thead
     for (var i = index1; i <= index2 && i < tableRows.length; i++)
     {
-        var route = tableRows[i].children[5].children[0].value;
+        var route = tableRows[i].children[routeIndex].children[0].value;
         if (route == "")
         {
             route = 0;
@@ -43,28 +47,36 @@ function shiftRoute(eventData)
         {
             route = route-1;
         }
-        tableRows[i].children[5].children[0].value = route;
+        tableRows[i].children[routeIndex].children[0].value = route;
     }
 }
 
-function decrementRoute()
+function fillTerritoryNames()
+{
+    var tableRows = document.getElementById("tertable").children;
+    var tername = document.getElementById("ternameFill").value;
+
+    // For each address, if the route is blank, set route to the latitude value
+    for (var i = 1; i < tableRows.length; i++)
+    {
+        tableRows[i].children[ternameIndex].children[0].value = tername;
+    }
+}
+
+function routeByLatitude()
 {
     var tableRows = document.getElementById("tertable").children;
 
-    // For each address, increase the route by 1
-    // Start at 1 to skip thead
+    // For each address, if the route is blank, set route to the latitude value
     for (var i = 1; i < tableRows.length; i++)
     {
-        var route = tableRows[i].children[5].children[0].value;
-        if (route == "")
+        var route = tableRows[i].children[routeIndex].children[0].value;
+        if (route == "" || route == null)
         {
-            route = 0;
+            route = Math.round(coords[i-1][0]*1e6);
+            console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
+            tableRows[i].children[routeIndex].children[0].value = route;
         }
-        else
-        {
-            route = parseInt(route);    
-        }
-        tableRows[i].children[5].children[0].value = route + 1;
     }
 }
 
@@ -77,6 +89,11 @@ function writeTableHeaderRow()
     // Create columns  
     var cell = document.createElement('td');
     cell.className = "index-head";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "city";
+    cell.innerHTML = "City";
     row.appendChild(cell);
     
     cell = document.createElement('td');
@@ -129,6 +146,12 @@ function writeTableRow(rowData, index)
     cell.innerHTML = index;
     row.appendChild(cell);
     
+    // City
+    cell = document.createElement('td');
+    cell.className = "city";
+    cell.innerHTML = rowData[3];
+    row.appendChild(cell);
+    
     // Address
     cell = document.createElement('td');
     cell.className = "addr";
@@ -165,7 +188,7 @@ function writeTableRow(rowData, index)
     {
         rowData[16] = "";
     }
-    cell.innerHTML = "<input type='text' id='tername' value='" + rowData[16] + "'>";
+    cell.innerHTML = "<input type='text' id='tername' value=\"" + rowData[16] + "\">";
     row.appendChild(cell);
     
     // Route
@@ -203,8 +226,8 @@ function saveTerritory()
     {
         var data = tableRows[i];
 
-        var tername = data.children[4].children[0].value;
-        var route = data.children[5].children[0].value;
+        var tername = data.children[ternameIndex].children[0].value;
+        var route = data.children[routeIndex].children[0].value;
 
         command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
         res = db.exec(command);
@@ -253,8 +276,8 @@ function applyRoute()
     {
         var data = tableRows[i];
 
-        var tername = data.children[4].children[0].value;
-        var route = data.children[5].children[0].value;
+        var tername = data.children[ternameIndex].children[0].value;
+        var route = data.children[routeIndex].children[0].value;
 
         command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
         res = db.exec(command);

@@ -31,7 +31,7 @@ table {
   line-height: 40px;
   border-spacing: 0;
   border: 1px solid #428bca;
-  width: 1000px;
+  width: 1400px;
   margin: 10px auto;
 }
 
@@ -49,8 +49,12 @@ td.name {
   width: 20%;
 }
 
+td.city {
+  width: 15%;
+}
+
 td.addr {
-  width: 26%;
+  width: 25%;
 }
 
 td.conf {
@@ -58,6 +62,9 @@ td.conf {
 }
 
 td.notes {
-  width: 35%;
+  width: 25%;
 }
 
+.indexInput {
+  width: 50px;
+}

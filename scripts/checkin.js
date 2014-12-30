@@ -50,11 +50,6 @@ function writeTableHeaderRow()
     var row = document.createElement('tr');
     
     // Create columns
-    var cell = document.createElement('td');
-    cell.colSpan = "3";
-    cell.className = "nh-head";
-    cell.innerHTML = "NH";
-    row.appendChild(cell);
     
     var cell = document.createElement('td');
     cell.className = "index-head";
@@ -106,10 +101,6 @@ function writeTableRow(rowData, index)
     var row = document.createElement('tr');
     
     // Fill cell data
-    // NH boxes
-    row.appendChild(document.createElement('td'));
-    row.appendChild(document.createElement('td'));
-    row.appendChild(document.createElement('td'));
     
     // Index
     var cell = document.createElement('td');
@@ -171,7 +162,7 @@ function writeTableRow(rowData, index)
     {
         rowData[7] = "";
     }
-    cell.innerHTML = "<input type='text' id='notes' value='" + rowData[7] + "'>";
+    cell.innerHTML = "<input type='text' id='notes' value=\"" + rowData[7] + "\">";
     row.appendChild(cell);
     
     table.appendChild(row);
@@ -206,12 +197,12 @@ function checkinTerritory()
     {
         var data = tableRows[i];
 
-        var name = data.children[4].children[0].value;
-        var housenum = data.children[5].children[0].value;
-        var street = data.children[6].children[0].value;
-        var city = data.children[7].children[0].value;
-        var confirmed = data.children[8].children[0].value;
-        var notes = data.children[9].children[0].value;
+        var name = data.children[1].children[0].value;
+        var housenum = data.children[2].children[0].value;
+        var street = data.children[3].children[0].value;
+        var city = data.children[4].children[0].value;
+        var confirmed = data.children[5].children[0].value;
+        var notes = data.children[6].children[0].value;
 
         command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
         res = db.exec(command);
