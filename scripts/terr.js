@@ -70,13 +70,9 @@ function routeByCoords()
     // For each address, if the route is blank, set route to the latitude value
     for (var i = 1; i < tableRows.length; i++)
     {
-        var route = tableRows[i].children[routeIndex].children[0].value;
-        if (route == "" || route == null)
-        {
-            route = Math.round((coords[i-1][0] + coords[i-1][1])*1e6);
-            console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
-            tableRows[i].children[routeIndex].children[0].value = route;
-        }
+        var route = Math.round((coords[i-1][0] + coords[i-1][1])*1e6);
+        console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
+        tableRows[i].children[routeIndex].children[0].value = route;
     }
 }
 
