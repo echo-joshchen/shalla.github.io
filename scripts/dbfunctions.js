@@ -28,6 +28,7 @@ function readDbFile(fileReader)
     $(".chosen-select").chosen();
     
     $("#termenu").change(createTerritoryTable);
+    createTerritoryTable();
 }
 
 function fillDropDownMenu(rowData)
