@@ -53,7 +53,7 @@ function createTerritoryTable()
     
     writeTableHeaderRow();
     
-    if (res[0].values)
+    if (res[0] && res[0].values)
     {
         var index = 1;
         for (var i = 0; i < res[0].values.length && index < maxTableSize; i++)
