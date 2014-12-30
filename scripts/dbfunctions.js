@@ -53,11 +53,14 @@ function createTerritoryTable()
     
     writeTableHeaderRow();
     
-    var index = 1;
-    for (var i = 0; i < res[0].values.length && index < maxTableSize; i++)
+    if (res[0].values)
     {
-        var rowData = res[0].values[i];
-        index = writeTableRow(rowData, index);
+        var index = 1;
+        for (var i = 0; i < res[0].values.length && index < maxTableSize; i++)
+        {
+            var rowData = res[0].values[i];
+            index = writeTableRow(rowData, index);
+        }
     }
 
     generateMap();

@@ -17,7 +17,7 @@ $(document).ready(function () {
     $("#decrButton").click(false, shiftRoute);
     $("#applyRoute").click(applyRoute);
     $("#fillButton").click(fillTerritoryNames);
-    $("#latRoute").click(routeByLatitude);
+    $("#coordRoute").click(routeByCoords);
 });
 
 function shiftRoute(eventData)
@@ -63,7 +63,7 @@ function fillTerritoryNames()
     }
 }
 
-function routeByLatitude()
+function routeByCoords()
 {
     var tableRows = document.getElementById("tertable").children;
 
@@ -73,7 +73,7 @@ function routeByLatitude()
         var route = tableRows[i].children[routeIndex].children[0].value;
         if (route == "" || route == null)
         {
-            route = Math.round(coords[i-1][0]*1e6);
+            route = Math.round((coords[i-1][0] + coords[i-1][1])*1e6);
             console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
             tableRows[i].children[routeIndex].children[0].value = route;
         }
