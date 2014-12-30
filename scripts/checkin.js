@@ -115,7 +115,7 @@ function writeTableRow(rowData, index)
     {
         rowData[0] = "";
     }
-    cell.innerHTML = "<input type='text' id='name' value='" + rowData[0] + "'>";
+    cell.innerHTML = "<input type='text' id='name' value='" + toTitleCase(rowData[0]) + "'>";
     row.appendChild(cell);
     
     // House Number
@@ -127,13 +127,13 @@ function writeTableRow(rowData, index)
     // Street
     cell = document.createElement('td');
     cell.className = "street";
-    cell.innerHTML = "<input type='text' id='street' value='" + rowData[2] + "'>";
+    cell.innerHTML = "<input type='text' id='street' value='" + toTitleCase(rowData[2]) + "'>";
     row.appendChild(cell);
 
     // City 
     cell = document.createElement('td');
     cell.className = "city";
-    cell.innerHTML = "<input type='text' id='city' value='" + rowData[3] + "'>";
+    cell.innerHTML = "<input type='text' id='city' value='" + toTitleCase(rowData[3]) + "'>";
     row.appendChild(cell);
     dbAddresses[index] = [rowData[1], rowData[2], rowData[3]];
     
