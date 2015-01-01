@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Checkin Territory</title>
+  
+    <!-- JavaScript -->
+    <script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui.js"></script>
+    <script type="text/javascript" src="scripts/sql.js"></script>
+    <script type="text/javascript" src="scripts/search.js"></script>
+    <script type="text/javascript" src="scripts/chosen.jquery.js"></script>
+    <script type="text/javascript" src="scripts/prism.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script type="text/javascript" src="scripts/gmaps.js"></script>
+    <script type="text/javascript" src="scripts/csvimport.js"></script>
+    <script type="text/javascript" src="scripts/mapfunctions.js"></script>
+    <script type="text/javascript" src="scripts/dbfunctions.js"></script>
+    <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
+
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/checkin.css">
+    <link rel="stylesheet" type="text/css" href="css/search.css">
+    <link rel="stylesheet" type="text/css" href="css/prism.css">
+    <link rel="stylesheet" type="text/css" href="css/chosen.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css">
+</head>
+
+<body>
+
+    <label id="fileSelect">Load an SQLite database file: <input type='file' id='dbfile' ></label> <br>
+        
+    <div id="verify">
+        <select id="verifySel">
+            <option value='hide'>Hide Confirmed Not Chinese</option>
+            <option value='show'>Show Confirmed Not Chinese</option>
+        </select>
+    </div>
+    
+    <div id="save">
+        <button id="saveButton">Save</button>
+    </div>
+
+    <div id="searchArea">
+        Name<br><input class="search_field" type='text' id='search_name' value="" /><br>
+        House number<br><input class="search_field" type='text' id='search_housenum' value="" /><br>
+        Street<br><input class="search_field" type='text' id='search_street' value="" /><br>
+        City<br><input class="search_field" type='text' id='search_city' value="" /><br>
+        Notes<br><input class="search_field" type='text' id='search_notes' value="" /><br>
+        Tername<br><input class="search_field" type='text' id='search_tername' value="" /><br>
+        <button id="clearButton">Clear</button>
+        <button id="searchButton">Search</button>
+    </div>
+    <br>
+    
+    <table id="tertable"></table>
+
+    <button id = "addNew">Add new address</button>
+
+    <div id="mapResize" class="ui-widget-content">
+        <div id="map"></div>
+    </div>
+
+</body>
+</html>

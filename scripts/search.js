@@ -6,21 +6,129 @@ var dbAddresses=[];
 var maxTableSize=50;
 
 $(document).ready(function () {
-    $("#dbfile").change(loadDatabase);
+    $("#dbfile").change(loadDatabaseSearch);
     $("#tertable").click(refreshMap);
 	$("#mapResize").resizable();
 
-    var currentDate = new Date();
-    var day = currentDate.getDate();
-    var month = currentDate.getMonth() + 1;
-    var year = currentDate.getFullYear();
-    $("#inDate").val(month + "/" + day + "/" + year);
-
-    $("#checkin").hide();
-    $("#checkinButton").click(checkinTerritory);
+    $("#save").hide();
+    $("#saveButton").click(saveAddresses);
 
     $("#addNew").click(addNewAddress);
 });
+// Load database from a user selected file
+function loadDatabaseSearch()
+{
+    var f =  $('#dbfile').prop('files')[0];
+    var r = new FileReader();
+    r.onload = function(){readDbFileSearch(r)};
+    r.readAsArrayBuffer(f);
+    
+    $("#save").show();
+}
+
+// Read the database file
+function readDbFileSearch(fileReader)
+{
+    var Uints = new Uint8Array(fileReader.result);
+    db = new SQL.Database(Uints);
+
+    $("#searchButton").click(createTerritoryTableSearch);
+    $("#clearButton").click(clearSearchFields);
+}
+
+function clearSearchFields()
+{
+    document.getElementById("search_name").value = "";
+    document.getElementById("search_housenum").value = "";
+    document.getElementById("search_street").value = "";
+    document.getElementById("search_city").value = "";
+    document.getElementById("search_notes").value = "";
+    document.getElementById("search_tername").value = "";
+}
+
+function createTerritoryTableSearch()
+{
+    // Clear current table and map
+    document.getElementById("tertable").innerHTML = "";
+    coords = [];
+    dbAddresses = [];
+    
+    // Create search command
+    var search_name = document.getElementById("search_name").value;
+    var search_housenum = document.getElementById("search_housenum").value;
+    var search_street = document.getElementById("search_street").value;
+    var search_city = document.getElementById("search_city").value;
+    var search_notes = document.getElementById("search_notes").value;
+    var search_tername = document.getElementById("search_tername").value;
+    
+    if (search_name == "" &&
+        search_housenum == "" &&
+        search_street == "" &&
+        search_city == "" &&
+        search_notes == "" &&
+        search_tername == "")
+    {
+        console.log("No search terms.");
+    }
+    else
+    {
+        var command = "SELECT * FROM master WHERE ";
+        var first_term = true;
+        if (search_name != "")
+        {
+            command += "name like \"%" + search_name + "%\"";
+            first_term = false;
+        }
+        if (search_housenum != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "housenum like \"%" + search_housenum + "%\"";
+            first_term = false;
+        }
+        if (search_street != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "street like \"%" + search_street + "%\"";
+            first_term = false;
+        }
+        if (search_city != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "city like \"%" + search_city + "%\"";
+            first_term = false;
+        }
+        if (search_notes != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "notes like \"%" + search_notes + "%\"";
+            first_term = false;
+        }
+        if (search_tername != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "tername like \"%" + search_tername + "%\"";
+            first_term = false;
+        }
+        command += ";";
+        console.log("Search query: " + command);
+
+        var res = db.exec(command);
+        
+        writeTableHeaderRow();
+        
+        if (res[0] && res[0].values)
+        {
+            var index = 1;
+            for (var i = 0; i < res[0].values.length && index <= maxTableSize; i++)
+            {
+                var rowData = res[0].values[i];
+                index = writeTableRow(rowData, index);
+            }
+        }
+
+        generateMap();
+    }
+}
 
 function addNewAddress()
 {
@@ -34,6 +142,7 @@ function addNewAddress()
     newAddrData[7] = "";
     newAddrData[9] = "";
     newAddrData[14] = "";
+    newAddrData[16] = "New Addresses";
     writeTableRow(newAddrData, index);
 }
 
@@ -76,6 +185,11 @@ function writeTableHeaderRow()
     cell = document.createElement('td');
     cell.className = "notes";
     cell.innerHTML = "Notes";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "tername";
+    cell.innerHTML = "Territory";
     row.appendChild(cell);
     
     tableBody.appendChild(row);
@@ -159,6 +273,16 @@ function writeTableRow(rowData, index)
     cell.innerHTML = "<input type='text' id='notes' value=\"" + rowData[7] + "\">";
     row.appendChild(cell);
     
+    // Tername
+    cell = document.createElement('td');
+    cell.className = "tername";
+    if (rowData[16] == null)
+    {
+        rowData[16] = "";
+    }
+    cell.innerHTML = "<input type='text' id='tername' value=\"" + rowData[16] + "\">";
+    row.appendChild(cell);
+    
     table.appendChild(row);
     
     // Fill coordinate info;
@@ -171,20 +295,11 @@ function writeTableRow(rowData, index)
     return index + 1;
 }
 
-function checkinTerritory()
+
+function saveAddresses()
 {
-    // Mark selected territory as checked in
-    var menu = document.getElementById("termenu");
-    var tername = menu.options[menu.selectedIndex].value;
-    var command = "UPDATE territory SET free=\"TRUE\" WHERE tername=\"" + tername + "\";";
-    var res = db.exec(command);
-
-    // Mark check out date from text box
-    var date = $("#inDate").val();
-    command = "UPDATE territory SET indate = \"" + date + "\" WHERE tername=\"" + tername + "\";";
-    res = db.exec(command);
-
     var tableRows = document.getElementById("tertable").children;
+    var command = "";
     // For each address, write the data out
     // Start at 1 to skip thead
     for (var i = 1; i < tableRows.length; i++)
@@ -197,12 +312,16 @@ function checkinTerritory()
         var city = data.children[4].children[0].value;
         var confirmed = data.children[5].children[0].value;
         var notes = data.children[6].children[0].value;
+        var tername = "New Addresses";
 
-        command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
-        res = db.exec(command);
         try 
         {
-            if (res[0].values[0] >= 1)
+            if (i < dbAddresses.length)
+            {
+                command = "SELECT count(*) FROM master WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+            }
+            if (i < dbAddresses.length && res[0].values[0] >= 1)
             {
                 // Name
                 command = "UPDATE master SET name = \"" + name + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
