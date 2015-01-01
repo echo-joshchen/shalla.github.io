@@ -119,7 +119,6 @@ function writeTableRow(rowData, index)
     }
     row.appendChild(cell);
     
-    
     table.appendChild(row);
     
     // Fill coordinate info;

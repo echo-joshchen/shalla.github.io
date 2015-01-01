@@ -1,0 +1,23 @@
+table {
+  color: #000;
+  font-family: sans-serif;
+  font-size: .9em;
+  font-weight: 300;
+  line-height: 40px;
+  border-spacing: 0;
+  border: 1px solid #428bca;
+  width: 1000px;
+  margin: 10px auto;
+}
+
+th {font-weight: bold;}
+
+thead tr:last-child {border-bottom: 2px solid #ddd;}
+
+td {
+  border: 1px solid #777;
+  text-align: center;
+}
+
+td.title { width: 50%; }
+td.data { width: 50%; }
