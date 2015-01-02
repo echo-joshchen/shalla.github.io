@@ -68,3 +68,5 @@ td.notes {
 .indexInput {
   width: 50px;
 }
+
+input { text-align: center; }

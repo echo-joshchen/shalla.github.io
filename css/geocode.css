@@ -45,12 +45,14 @@ td {
   width: 3%;
 }
 
-td.name { width: 20%; }
+td.name { width: 15%; }
 td.housenum { width: 5%; }
-td.street { width: 25%; }
-td.city { width: 15%; }
+td.street { width: 20%; }
+td.city { width: 10%; }
 td.confirmed { width: 10%;}
-td.notes { width: 25%; }
+td.notes { width: 20%; }
+td.lat { width: 10%; }
+td.long { width: 10%; }
 
 input { 
   width: 90%;
