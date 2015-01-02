@@ -22,3 +22,54 @@
   width: 300px;
   height: 20px;
 }
+
+
+
+#map {
+    width: 99%;
+    height: 99%;
+    margin: .5em;
+}
+
+#mapResize {
+    width: 1200px;
+    height: 1200px;
+    padding: 1em;
+    text-align: center;
+    margin: 10px auto 100px auto;
+}
+
+table {
+  color: #000;
+  font-family: sans-serif;
+  font-size: .9em;
+  font-weight: 300;
+  line-height: 40px;
+  border-spacing: 0;
+  border: 1px solid #428bca;
+  width: 1500px;
+  margin: 10px auto;
+}
+
+th {font-weight: bold;}
+
+thead tr:last-child {border-bottom: 2px solid #ddd;}
+
+td {
+  border: 1px solid #777;
+  text-align: center;
+  width: 3%;
+}
+
+td.name { width: 15%; }
+td.housenum { width: 5%; }
+td.street { width: 25%; }
+td.city { width: 10%; }
+td.confirmed { width: 10%;}
+td.notes { width: 20%; }
+td.tername { width: 15%; }
+
+input { 
+  width: 90%;
+  text-align: center;
+}
