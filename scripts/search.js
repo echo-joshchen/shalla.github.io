@@ -14,6 +14,11 @@ $(document).ready(function () {
     $("#saveButton").click(saveAddresses);
 
     $("#addNew").click(addNewAddress);
+    $(".search_field").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#searchButton").click();
+    }
+});
 });
 // Load database from a user selected file
 function loadDatabaseSearch()
