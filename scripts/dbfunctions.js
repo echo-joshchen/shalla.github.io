@@ -16,9 +16,10 @@ function readDbFile(fileReader)
 {
     var Uints = new Uint8Array(fileReader.result);
     db = new SQL.Database(Uints);
-        
+    
     // Clear existing menu
-    document.getElementById("termenu").innerHTML = "";
+    var menu = document.getElementById("termenu");
+    menu.innerHTML = "";
     
     // Read out territory names
     var res = db.exec("SELECT tername FROM territory");
@@ -50,6 +51,12 @@ function createTerritoryTable()
     // Read out selected territory
     var menu = document.getElementById("termenu");
     var tername = menu.options[menu.selectedIndex].value;
+
+    if (tername == "")
+    {
+        return;
+    }
+
     var res = db.exec("SELECT * FROM master WHERE tername = \"" + tername + "\" ORDER BY route;");
     
     writeTableHeaderRow();

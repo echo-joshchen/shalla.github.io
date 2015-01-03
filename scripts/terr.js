@@ -19,6 +19,7 @@ $(document).ready(function () {
     $("#fillButton").click(fillTerritoryNames);
     $("#coordRoute").click(routeByCoords);
     $("#newTerrButton").click(addNewTerritory);
+    $("#deleteButton").click(deleteCurrentTerritory);
 });
 
 function shiftRoute(eventData)
@@ -73,10 +74,13 @@ function routeByCoords()
     // For each address, if the route is blank, set route to the -latitude + longitude value
     for (var i = 1; i < tableRows.length; i++)
     {
-        var route = Math.round((-coords[i-1][0] + coords[i-1][1])*1e6);
-        console.log(coords[i-1]);
-        console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
-        tableRows[i].children[routeIndex].children[0].value = route;
+        if (coords[i] != null)
+        {
+            var route = Math.round((-coords[i-1][0] + coords[i-1][1])*1e6);
+            console.log(coords[i-1]);
+            console.log("Setting route for " + dbAddresses[i][0] + " " + dbAddresses[i][1] + ": " + route);
+            tableRows[i].children[routeIndex].children[0].value = route;
+        }
     }
 }
 
@@ -335,6 +339,43 @@ function addNewTerritory()
     catch (err)
     {
         console.log("Territory name " + newTerritoryName + " had error: " + err.message);
+    }
+
+    // Read out selected territory
+    var data = db.export();
+    var blob = new Blob([data], {type: "application/x-sqlite3;charset=" + document.characterSet});
+    saveAs(blob, "territory.db");
+    console.log("File save done");
+
+    reloadDropDownMenu();
+}
+
+function deleteCurrentTerritory()
+{
+    // Get current territory name
+    var deleteTerritoryName = document.getElementById("termenu").value;
+
+    command = "SELECT count(*) FROM territory WHERE tername=\"" + deleteTerritoryName + "\";";
+    console.log(command);
+    res = db.exec(command);
+    try 
+    {
+        if (res[0].values[0] > 0)
+        {
+            // Tername
+            command = "DELETE FROM territory where tername=\"" + deleteTerritoryName + "\";";
+            res = db.exec(command);
+
+            console.log("Territory deleted: " + deleteTerritoryName);
+        }
+        else
+        {
+            console.log("Territory doesn't exist: " + deleteTerritoryName);
+        }
+    }
+    catch (err)
+    {
+        console.log("Territory name " + deleteTerritoryName + " had error: " + err.message);
     }
 
     // Read out selected territory
