@@ -74,7 +74,7 @@ function routeByCoords()
     // For each address, if the route is blank, set route to the -latitude + longitude value
     for (var i = 1; i < tableRows.length; i++)
     {
-        if (coords[i] != null)
+        if (coords[i-1] != null)
         {
             var route = Math.round((-coords[i-1][0] + coords[i-1][1])*1e6);
             console.log(coords[i-1]);
