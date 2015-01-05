@@ -317,7 +317,7 @@ function saveAddresses()
         var city = data.children[4].children[0].value;
         var confirmed = data.children[5].children[0].value;
         var notes = data.children[6].children[0].value;
-        var tername = "New Addresses";
+        var tername = data.children[7].children[0].value;
 
         try 
         {
