@@ -342,6 +342,11 @@ function saveAddresses()
                 command = "UPDATE master SET notes = \"" + notes + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
                 res = db.exec(command);
                 //console.log(notes);
+                
+                // Tername
+                command = "UPDATE master SET tername = \"" + tername + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
+                res = db.exec(command);
+                //console.log(tername);
 
                 // Update House number, street, and city last to make searches stay correct
                 command = "UPDATE master SET housenum=\"" + housenum + "\", street=\"" + street + "\", city=\"" + city + "\" WHERE housenum=\"" + dbAddresses[i][0] + "\" AND street=\"" + dbAddresses[i][1] + "\" AND city=\"" + dbAddresses[i][2] + "\";";
