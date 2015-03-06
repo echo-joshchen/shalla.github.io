@@ -8,7 +8,6 @@ var routeIndex = 6;
 
 $(document).ready(function () {
     $("#dbfile").change(loadDatabase);
-    $("#tertable").click(refreshMap);
 	$("#mapResize").resizable();
 
     $("#save").hide();
