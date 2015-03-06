@@ -114,7 +114,7 @@ function createTerritoryTableSearch()
             command += "tername like \"%" + search_tername + "%\"";
             first_term = false;
         }
-        command += ";";
+        command += " ORDER BY tername,route;";
         console.log("Search query: " + command);
 
         var res = db.exec(command);
