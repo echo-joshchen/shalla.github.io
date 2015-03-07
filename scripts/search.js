@@ -49,6 +49,7 @@ function clearSearchFields()
     document.getElementById("search_city").value = "";
     document.getElementById("search_notes").value = "";
     document.getElementById("search_tername").value = "";
+    document.getElementById("search_confirmed").value = "";
 }
 
 function createTerritoryTableSearch()
@@ -65,13 +66,15 @@ function createTerritoryTableSearch()
     var search_city = document.getElementById("search_city").value;
     var search_notes = document.getElementById("search_notes").value;
     var search_tername = document.getElementById("search_tername").value;
+    var search_confirmed = document.getElementById("search_confirmed").value;
     
     if (search_name == "" &&
         search_housenum == "" &&
         search_street == "" &&
         search_city == "" &&
         search_notes == "" &&
-        search_tername == "")
+        search_tername == "" &&
+        search_confirmed == "")
     {
         console.log("No search terms.");
     }
@@ -112,6 +115,12 @@ function createTerritoryTableSearch()
         {
             command += first_term? "" : " AND ";
             command += "tername like \"%" + search_tername + "%\"";
+            first_term = false;
+        }
+        if (search_confirmed != "")
+        {
+            command += first_term? "" : " AND ";
+            command += "confirmed like \"%" + search_confirmed + "%\"";
             first_term = false;
         }
         command += " ORDER BY tername,route;";
