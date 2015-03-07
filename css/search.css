@@ -61,6 +61,19 @@ td {
   width: 3%;
 }
 
+td.nh {
+  width: 2%;
+}
+
+td.addr {
+  width: 26%;
+}
+
+td.conf {
+  width: 10%;
+}
+
+
 td.name { width: 15%; }
 td.housenum { width: 5%; }
 td.street { width: 25%; }

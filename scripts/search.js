@@ -17,8 +17,8 @@ $(document).ready(function () {
     $(".search_field").keyup(function(event){
         if(event.keyCode == 13){
             $("#searchButton").click();
-    }
-});
+        }
+    });
 });
 // Load database from a user selected file
 function loadDatabaseSearch()
@@ -128,7 +128,16 @@ function createTerritoryTableSearch()
 
         var res = db.exec(command);
         
-        writeTableHeaderRow();
+        var edit_format = $("#format").val() == "edit";
+        // Use selected format
+        if (edit_format)
+        {
+            writeTableHeaderRowEdit();
+        }
+        else
+        {
+            writeTableHeaderRow();
+        }
         
         if (res[0] && res[0].values)
         {
@@ -136,7 +145,14 @@ function createTerritoryTableSearch()
             for (var i = 0; i < res[0].values.length && index <= maxTableSize; i++)
             {
                 var rowData = res[0].values[i];
-                index = writeTableRow(rowData, index);
+                if (edit_format)
+                {
+                    index = writeTableRowEdit(rowData, index);
+                }
+                else
+                {
+                    index = writeTableRow(rowData, index);
+                }
             }
         }
 
@@ -160,7 +176,7 @@ function addNewAddress()
     writeTableRow(newAddrData, index);
 }
 
-function writeTableHeaderRow()
+function writeTableHeaderRowEdit()
 {
     var table = document.getElementById("tertable");
     var tableBody = document.createElement('thead');
@@ -210,7 +226,48 @@ function writeTableHeaderRow()
     table.appendChild(tableBody);
 }
 
-function writeTableRow(rowData, index)
+function writeTableHeaderRow()
+{
+    var table = document.getElementById("tertable");
+    var tableBody = document.createElement('thead');
+    var row = document.createElement('tr');
+    
+    // Create columns
+    var cell = document.createElement('td');
+    cell.colSpan = "3";
+    cell.className = "nh-head";
+    cell.innerHTML = "NH";
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    cell.className = "index-head";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "name";
+    cell.innerHTML = "Name";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "addr";
+    cell.innerHTML = "Address";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "conf";
+    cell.innerHTML = "Confirmed";
+    row.appendChild(cell);
+    
+    cell = document.createElement('td');
+    cell.className = "notes";
+    cell.innerHTML = "Notes";
+    row.appendChild(cell);
+    
+    tableBody.appendChild(row);
+    table.appendChild(tableBody);
+}
+
+function writeTableRowEdit(rowData, index)
 {
     var verify = $("#verifySel").val() == "show"
     // Skip if marked as not chinese
@@ -295,6 +352,76 @@ function writeTableRow(rowData, index)
         rowData[16] = "";
     }
     cell.innerHTML = "<input type='text' id='tername' value=\"" + rowData[16] + "\">";
+    row.appendChild(cell);
+    
+    table.appendChild(row);
+    
+    // Fill coordinate info;
+    if (rowData[12] != null &&
+        rowData[13] != null)
+    {
+        coords[index-1] = [rowData[12],rowData[13]];
+    }
+    
+    return index + 1;
+}
+
+function writeTableRow(rowData, index)
+{
+    var verify = $("#verifySel").val() == "show"
+    // Skip if marked as not chinese
+    if (!verify && (rowData[9] == 1 || rowData[14] == "Not CH"))
+    {
+        return index;
+    }
+    
+    var table = document.getElementById("tertable");
+    var row = document.createElement('tr');
+    
+    // Fill cell data
+    // NH boxes
+    row.appendChild(document.createElement('td'));
+    row.appendChild(document.createElement('td'));
+    row.appendChild(document.createElement('td'));
+    
+    // Index
+    var cell = document.createElement('td');
+    cell.className = "index";
+    cell.innerHTML = index;
+    row.appendChild(cell);
+    
+    // Name
+    cell = document.createElement('td');
+    cell.className = "name";
+    cell.innerHTML = rowData[0];
+    row.appendChild(cell);
+    
+    // Address
+    cell = document.createElement('td');
+    cell.className = "addr";
+    cell.innerHTML = rowData[1] + " " + rowData[2];
+    row.appendChild(cell);
+    
+    // Confirmed
+    cell = document.createElement('td');
+    cell.className = "conf";
+    if ( rowData[14] == 1 || rowData[14] == "Yes")
+    {
+        cell.innerHTML = "Yes";
+    }
+    else if ( rowData[9] == 1)
+    {
+        cell.innerHTML = "Not CH";
+    }
+    row.appendChild(cell);
+    
+    // Notes
+    cell = document.createElement('td');
+    cell.className = "notes";
+    if (rowData[7] != null)
+    {
+        cell.innerHTML = rowData[7];
+    }
     row.appendChild(cell);
     
     table.appendChild(row);
