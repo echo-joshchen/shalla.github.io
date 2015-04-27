@@ -1,4 +1,5 @@
 var maxTableSize=50;
+var selectedIndex = 0;
 
 // Load database from a user selected file
 function loadDatabase()
@@ -26,6 +27,11 @@ function readDbFile(fileReader)
     res[0].values.forEach(function(rowData) {
         fillDropDownMenu(rowData);
     });
+    console.log("Index: " + selectedIndex + ", " + res[0].values.length);
+    if (selectedIndex < res[0].values.length)
+    {
+        document.getElementById("termenu").selectedIndex = selectedIndex;
+    }
     $(".chosen-select").chosen();
     
     $("#termenu").change(createTerritoryTable);
@@ -47,10 +53,10 @@ function createTerritoryTable()
     document.getElementById("tertable").innerHTML = "";
     coords = [];
     dbAddresses = [];
-    
     // Read out selected territory
     var menu = document.getElementById("termenu");
-    var tername = menu.options[menu.selectedIndex].value;
+    selectedIndex = menu.selectedIndex;
+    var tername = menu.options[selectedIndex].value;
 
     if (tername == "")
     {
