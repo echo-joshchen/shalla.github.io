@@ -2,6 +2,10 @@
 
 This file has Google Maps API functions.
 
+Dependencies:
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="scripts/gmaps.js"></script>
+
 **/
 
 // Geocode all addresses in addresses[]
